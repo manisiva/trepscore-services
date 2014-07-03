@@ -3,7 +3,8 @@ require 'bundler/setup'
 
 task :console do
   require 'pry'
-  require 'trepscore-services' # You know what to do.
+  require 'trepscore-services'
+  Service.load_services
   ARGV.clear
   Pry.start
 end
