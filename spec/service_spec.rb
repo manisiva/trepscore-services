@@ -1,3 +1,3 @@
 describe Service do
-  pending "add some specs here"
+  pending "Add some specs or delete this file."
 end
