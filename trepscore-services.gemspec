@@ -20,8 +20,13 @@ Gem::Specification.new do |spec|
   spec.homepage = 'https://github.com/trepscore/trepscore-services'
   # spec.licenses = ['MIT']
 
-  spec.add_dependency 'hashie', '>= 3.1.0'
-
+  spec.add_dependency 'faraday',              '>= 0.9.0'
+  spec.add_dependency 'faraday_middleware',   '>= 0.9.1'
+  spec.add_dependency 'multi_xml',            '>= 0'
+  spec.add_dependency 'multi_json',           '>= 0'
+  
+  ## Service Specific dependencies get added here
+  
 
 
   spec.files = %w(Gemfile LICENSE README.md CONTRIBUTING.md Rakefile)
@@ -29,6 +34,8 @@ Gem::Specification.new do |spec|
   spec.files += Dir.glob("lib/**/*.rb")
   spec.files += Dir.glob("spec/**/*.rb")
   # spec.files += Dir.glob("script/*")
+
+  spec.require_paths = ['lib', 'lib/services']
 
   dev_null    = File.exist?('/dev/null') ? '/dev/null' : 'NUL'
   git_files   = `git ls-files -z 2>#{dev_null}`

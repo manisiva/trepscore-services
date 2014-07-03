@@ -1,8 +1,11 @@
 PATH
   remote: .
   specs:
-    trepscore-services (0.0.1.fda1cfe)
-      hashie (>= 3.1.0)
+    trepscore-services (0.0.1.9200ac3)
+      faraday (>= 0.9.0)
+      faraday_middleware (>= 0.9.1)
+      multi_json
+      multi_xml
 
 GEM
   remote: https://rubygems.org/
@@ -11,6 +14,10 @@ GEM
       timers (~> 1.1.0)
     coderay (1.1.0)
     diff-lcs (1.2.5)
+    faraday (0.9.0)
+      multipart-post (>= 1.2, < 3)
+    faraday_middleware (0.9.1)
+      faraday (>= 0.7.4, < 0.10)
     ffi (1.9.3)
     formatador (0.2.5)
     guard (2.6.1)
@@ -25,13 +32,15 @@ GEM
     guard-rspec (4.2.10)
       guard (~> 2.1)
       rspec (>= 2.14, < 4.0)
-    hashie (3.1.0)
-    listen (2.7.7)
+    listen (2.7.9)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
-    lumberjack (1.0.6)
+    lumberjack (1.0.9)
     method_source (0.8.2)
+    multi_json (1.10.1)
+    multi_xml (0.5.5)
+    multipart-post (2.0.0)
     pry (0.10.0)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -46,14 +55,14 @@ GEM
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
       rspec-mocks (~> 3.0.0)
-    rspec-core (3.0.0)
+    rspec-core (3.0.2)
       rspec-support (~> 3.0.0)
-    rspec-expectations (3.0.0)
+    rspec-expectations (3.0.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.0.0)
-    rspec-mocks (3.0.1)
+    rspec-mocks (3.0.2)
       rspec-support (~> 3.0.0)
-    rspec-support (3.0.0)
+    rspec-support (3.0.2)
     slop (3.5.0)
     terminal-notifier-guard (1.5.3)
     thor (0.19.1)
