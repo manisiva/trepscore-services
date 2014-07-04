@@ -25,6 +25,8 @@ module Pipedrive
 end
 
 class Service::Pipedrive < Service
+  string :token
+  category :crm
 
   def call
     client = ::Pipedrive::Client.new(api_token: token)
