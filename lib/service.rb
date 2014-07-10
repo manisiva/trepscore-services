@@ -107,6 +107,14 @@ class Service
     def call(data: {})
       new(data: data).call
     end
+
+    def documentation
+      file = name.dup
+      file.downcase!
+      file.sub! /.*:/, ''
+      doc_file = File.expand_path("../../doc/#{file}", __FILE__)
+      File.exists?(doc_file) ? File.read(doc_file) : ""
+    end
   end
 
   attr_reader :data
