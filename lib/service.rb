@@ -1,6 +1,8 @@
 class Service
-  class << self
+  
 
+  class << self
+    
     def load_services
       path = File.expand_path("../services/*.rb", __FILE__)
       Dir[path].each { |lib| require(lib) }
@@ -115,6 +117,19 @@ class Service
       doc_file = File.expand_path("../../doc/#{file}", __FILE__)
       File.exists?(doc_file) ? File.read(doc_file) : ""
     end
+
+
+    def oauth(provider:nil, &blk)
+      @oauth ||= {
+        provider: provider,
+        filter: blk
+      }
+    end
+
+    def oauth?
+      !@oauth.nil?
+    end
+ 
   end
 
   attr_reader :data
