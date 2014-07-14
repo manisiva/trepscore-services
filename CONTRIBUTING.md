@@ -1,6 +1,6 @@
 # Contributing
 
-TrepScore will accept service integrations for services on our [integration list]() and we'll pay you to make them! You can see all the details of our [bounty program](bounty-program) on its [wiki page](bounty-program).
+TrepScore will accept service integrations for services on our [integration list]() and we'll pay you to make them! You can see all the details of our [bounty program][bounty-program] on its [wiki page][bounty-program].
 
 In order to maintain quality and ensure we can track your contributions, every service requires the following:
   
