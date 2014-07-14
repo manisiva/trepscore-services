@@ -30,13 +30,12 @@ class Service::Pipedrive < Service
 
   def call
     client = ::Pipedrive::Client.new(api_token: token)
-    client.deals.all
-    # client.metrics
+    client.metrics
   end
 
   def token
-    raise_config_error "Missing 'api_token'" if data['api_token'].to_s == ''
-    data['api_token']
+    raise_config_error "Missing 'api_token'" if data['token'].to_s == ''
+    data['token']
   end
 
 end

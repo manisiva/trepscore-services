@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    trepscore-services (0.0.1.9200ac3)
+    trepscore-services (0.0.1.be4ab86)
       faraday (>= 0.9.0)
       faraday_middleware (>= 0.9.1)
       multi_json

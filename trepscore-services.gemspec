@@ -18,14 +18,11 @@ Gem::Specification.new do |spec|
   spec.authors  = ['Ryan Faerman']
   spec.email    = 'ryan@trepscore.com'
   spec.homepage = 'https://github.com/trepscore/trepscore-services'
-  # spec.licenses = ['MIT']
 
   spec.add_dependency 'faraday',              '>= 0.9.0'
   spec.add_dependency 'faraday_middleware',   '>= 0.9.1'
   spec.add_dependency 'multi_xml',            '>= 0'
   spec.add_dependency 'multi_json',           '>= 0'
-
-  spec.add_dependency 'omniauth-google-oauth2'
   
   ## Service Specific dependencies get added here
   
@@ -35,7 +32,6 @@ Gem::Specification.new do |spec|
   spec.files << "#{lib}.gemspec"
   spec.files += Dir.glob("lib/**/*.rb")
   spec.files += Dir.glob("spec/**/*.rb")
-  # spec.files += Dir.glob("script/*")
 
   spec.require_paths = ['lib', 'lib/services']
 
