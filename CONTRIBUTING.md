@@ -91,4 +91,4 @@ You can test your service in a ruby console:
 3. Verify the data looks as you expect.
 
 
-[bounty-program]: https://github.com/25-ventures/trepscore-services/wiki/TrepScore-Bounty-Program
+[bounty-program]: https://github.com/25-ventures/trepscore-services/wiki
