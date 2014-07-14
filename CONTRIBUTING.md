@@ -1,11 +1,11 @@
 # Contributing
 
-TrepScore will accept service integrations for services on our [integration list]() and we'll pay you to make them! You can see all the details of our [bounty program]() on its [wiki page]()
+TrepScore will accept service integrations for services on our [integration list]() and we'll pay you to make them! You can see all the details of our [bounty program]() on its [wiki page]().
 
 In order to maintain quality and ensure we can track your contributions, every service requires the following:
   
   - Set the service category using the DSL
-  - Setting the maintainer using at least your github username OR email address.
+  - Setting the maintainer using at least your github username or email address.
   - Thorough documentation about what the services does and what the options do.
   - Tests added to the test suite where appropriate
 
