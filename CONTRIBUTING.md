@@ -14,7 +14,7 @@ Any new services that don't meet the above criteria will be rejected; we have co
 We'd also like the following information to help make a great experience for our users:
 
  - A URL for the service
- - A URL to a logo for the service (png or gif preferred)
+ - A URL to a logo for the service (transparent png or gif preferred)
 
 You can annotate all of this directly in the service class itself, like so:
 
