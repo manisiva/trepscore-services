@@ -24,7 +24,8 @@ class Service::Github < Service
     end
 
     def secret
-        raise_config_error "Missing 'client secret'" if data['secret'].to_s==''
+      raise_config_error "Missing 'client secret'" if data['secret'].to_s==''
+      data['secret']
     end
 
 end

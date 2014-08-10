@@ -11,7 +11,7 @@ module Github
         authenticate
       end
 
-      def authenticate(token = @options[:client_id], secret = @options[:client_secret)
+      def authenticate(token = @options[:client_id], secret = @options[:client_secret])
         default_params.merge! client_id: token, client_secret: secret
       end
 
