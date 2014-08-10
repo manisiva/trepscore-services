@@ -19,13 +19,13 @@ class Service::Github < Service
     end
 
     def token
-      raise_config_error "Missing 'client_id'" if data['token'].to_s ==''
-      data['token']
+      raise_config_error "Missing 'client_id'" if data[:client_id].to_s ==''
+      data[:client_id]
     end
 
     def secret
-      raise_config_error "Missing 'client secret'" if data['secret'].to_s==''
-      data['secret']
+      raise_config_error "Missing 'client secret'" if data[:client_secret].to_s==''
+      data[:client_secret]
     end
 
 end

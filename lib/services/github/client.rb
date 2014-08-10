@@ -8,8 +8,8 @@ class Github::Client < Github::Base
 
   def metrics
     metrics = {}
-    
-    %i{codes commits files issues}.each do |source|
+    #codes commits files issues
+    %i{files}.each do |source|
       metrics[source] = send(source).metrics
     end
 

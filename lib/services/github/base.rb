@@ -2,36 +2,36 @@ require 'faraday'
 require 'faraday_middleware'
 
 module Github
-    class Base
+  class Base
 
-      include Enumerable
+    include Enumerable
 
-      def initialize(option = {})
-        @options = options
-        authenticate
-      end
+    def initialize(options = {})
+      @options = options
+      authenticate
+    end
 
-      def authenticate(token = @options[:client_id], secret = @options[:client_secret])
-        default_params.merge! client_id: token, client_secret: secret
-      end
+    def authenticate(token = @options[:client_id], secret = @options[:client_secret])
+      default_params.merge! client_id: token, client_secret: secret
+    end
 
-      def get(options = {})
-        return to_enum(__callee__, options) unless block_given?
+    def get(options = {})
+      return to_enum(__callee__, options) unless block_given?
 
-        response = _get_resource(options)
-        if response.success?
-          data = [(response.body['data'] || [])].flatten
-          data.each do |item|
-            yield OpenStruct.new item
-          end
+      response = _get_resource(options)
+      if response.success?
+        data = [(response.body['data'] || [])].flatten
+        data.each do |item|
+          yield OpenStruct.new item
+        end
           
-          if next_start(response)
-            options[:params] = (options[:params]||{}).merge({start:next_start(response)})
-            send(__callee__, options) do |data|
-              yield data
-            end
-         end
-       end
+        if next_start(response)
+          options[:params] = (options[:params]||{}).merge({start:next_start(response)})
+          send(__callee__, options) do |data|
+            yield data
+          end
+        end
+      end
       
     end
     alias_method :each, :get
@@ -71,28 +71,63 @@ module Github
     def base_uri
       protocol + 'api.github.com'
     end
+    
+    def resource_path
+      # The resource path should match the camelCased class name with the
+      # first letter downcased.  Github API is sensitive to capitalisation
+      klass = self.class.name.split('::').last
+      klass[0] = klass[0].chr.downcase
+      klass
+    end
 
-   private
-     def _get_resource(options = {})
-       params = default_params.merge (options.delete(:params) || {})
+    def resource(klass_name)
+      klass_name = klass_name.to_s.split('_').map(&:capitalize).join
+      _klasses[klass_name] ||= begin
+        klass = Object.const_get "::Github::#{klass_name}"
+        klass.new @options
+      end
+    end
 
-       response = connection.get do |req|
-         req.headers = ::Github::HEADERS
-         req.params.merge! params
-       end
-     end
+    def [](id)
+      path = [resource_path, id.to_s].join '/'
+      get(resource_path: path).first
+    end
 
-     def connection
-       @connection ||= ::Faraday.new(url: base_uri) do |conn|
-         conn.request :url_encoded
-         conn.adapter ::Faraday.default_adapter
+    private
+    def _get_resource(options = {})
+      params = default_params.merge (options.delete(:params) || {})
 
-         conn.response :json, content_type: /\bjson$/
-         conn.response :xml, content_type: /\bxml$/
-       end
-     end
-   end
- end
+      response = connection.get do |req|
+        req.headers = ::Github::HEADERS
+        req.params.merge! params
+      end
+    end
+    
+    def _klasses
+      @_klasses ||= {}
+    end
+
+    def next_start(response)
+      additional_data = response.body['additional_data']
+      if !additional_data.nil? && additional_data['pagination'] && additional_data['pagination']['more_items_in_collection']
+        additional_data['pagination']['next_start']
+      end
+    end
+
+    def default_params
+      @default_params ||= {}
+    end
+    
+    def connection
+      @connection ||= ::Faraday.new(url: base_uri) do |conn|
+        conn.request :url_encoded
+        conn.adapter ::Faraday.default_adapter
+        conn.response :json, content_type: /\bjson$/
+        conn.response :xml, content_type: /\bxml$/
+      end
+    end
+  end
+end
 
 
 
