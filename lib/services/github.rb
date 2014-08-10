@@ -1,11 +1,12 @@
 module Github
     HEADERS = {
         "User-Agent"    => "Ruby.Github.Api",
-        "Accept"        => "application/json",
+        "Accept"        => "application/vnd.github.v3+json",
         "Content-Type"  => "application/x-www-form-urlencoded"
     }
 
     autoload :Base, 'github/base'
+    autoload :Client, 'github/client'
 end
 
 class Service::Github < Service
