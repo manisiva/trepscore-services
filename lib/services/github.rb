@@ -2,7 +2,7 @@ module Github
     HEADERS = {
         "User-Agent"    => "Ruby.Github.Api",
         "Accept"        => "application/vnd.github.v3+json",
-        "Content-Type"  => "application/x-www-form-urlencoded"
+        "Content-Type"  => "application/json"
     }
 
     autoload :Base, 'github/base'
