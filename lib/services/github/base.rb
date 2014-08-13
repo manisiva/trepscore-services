@@ -34,10 +34,9 @@ module Github
     end
     alias_method :each, :get
 
-    
     def metrics
       metrics = {total: all.count}
-      
+
       get.each do |item|
         key = metric_key(item)
         break if key.nil?
@@ -68,79 +67,79 @@ module Github
     end
 
     def base_uri
-     protocol + 'api.github.com/repos/' + slug 
-   end
+      protocol + 'api.github.com/repos/' + slug 
+    end
 
-   def slug
-     "#{owner}/#{name}"
-   end
+    def slug
+      "#{owner}/#{name}"
+    end
  
-   def owner
-     @options[:user_name]
-   end
+    def owner
+      @options[:user_name]
+    end
 
-   def name
-     @options[:user_repo]
-   end
+    def name
+      @options[:user_repo]
+    end
 
-   def resource_path
-     #The resource path should match the camelCased class name with the
-     #first letter downcased.  
-     klass = self.class.name.split('::').last
-     klass[0] = klass[0].chr.downcase
-     klass
-   end
+    def resource_path
+      #The resource path should match the camelCased class name with the
+      #first letter downcased.  
+      klass = self.class.name.split('::').last
+      klass[0] = klass[0].chr.downcase
+      klass
+    end
 
-   def resource(klass_name)
-     klass_name = klass_name.to_s.split('_').map(&:capitalize).join
-     _klasses[klass_name] ||= begin
-       klass = Object.const_get "::Github::#{klass_name}"
-       klass.new @options
-     end
-   end
+    def resource(klass_name)
+      klass_name = klass_name.to_s.split('_').map(&:capitalize).join
+      _klasses[klass_name] ||= begin
+        klass = Object.const_get "::Github::#{klass_name}"
+        klass.new @options
+      end
+    end
 
-   def [](id)
-     path = [resource_path, id.to_s].join '/'
-     get(resource_path: path).first
-   end
+    def [](id)
+      path = [resource_path, id.to_s].join '/'
+      get(resource_path: path).first
+    end
 
-   def issue_resource_path
-     ISSUE_RESOURCE_PATH
-   end
+    def issue_resource_path
+      ISSUE_RESOURCE_PATH
+    end
 
-   #dynamically passing state for the issues based on the class name
-   def filter_conditions(resource_path)      	
-     { :state => OPEN_ISSUES} if resource_path.start_with?(OPEN_ISSUES)
-     { :state => CLOSED_ISSUES} if resource_path.start_with?(CLOSED_ISSUES)
-   end    
+    #dynamically passing state for the issues based on the class name
+    def filter_conditions(resource_path)      	
+      { :state => OPEN_ISSUES} if resource_path.start_with?(OPEN_ISSUES)
+      { :state => CLOSED_ISSUES} if resource_path.start_with?(CLOSED_ISSUES)
+    end    
 
-   private
-     def _get_resource(options = {})
-       params = default_params.merge (options.delete(:params) ||  {})
-       response = connection.get do |req|
-         req.url (options.delete(:resource_path) || resource_path)
-         req.url (issue_resource_path), filter_conditions(resource_path) if resource_path && resource_path.end_with?(CLASS_NAME_WITH_ISSUE)          
-         req.headers = ::Github::HEADERS
-         req.params 
-       end
-     end
+    private
+      def _get_resource(options = {})
+        params = default_params.merge (options.delete(:params) ||  {})
+        response = connection.get do |req|
+          req.url (options.delete(:resource_path) || resource_path)
+          req.url (issue_resource_path), filter_conditions(resource_path) if resource_path && resource_path.end_with?(CLASS_NAME_WITH_ISSUE)          
+          req.headers = ::Github::HEADERS
+          req.params 
+        end
+      end
 
-     def _klasses
-       @_klasses ||= {}
-     end
+      def _klasses
+        @_klasses ||= {}
+      end
 
-     def default_params
-       @default_params ||= {}
-     end
+      def default_params
+        @default_params ||= {}
+      end
 
-     def connection
-       @connection ||= ::Faraday.new(url: base_uri) do |conn|
-         conn.request :url_encoded
-         conn.adapter ::Faraday.default_adapter
+      def connection
+        @connection ||= ::Faraday.new(url: base_uri) do |conn|
+          conn.request :url_encoded
+          conn.adapter ::Faraday.default_adapter
 
-         conn.response :json, content_type: /\bjson$/
-         conn.response :xml,  content_type: /\bxml$/
-       end
-     end
+          conn.response :json, content_type: /\bjson$/
+          conn.response :xml,  content_type: /\bxml$/
+        end
+      end
   end
 end

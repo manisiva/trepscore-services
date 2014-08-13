@@ -40,5 +40,4 @@ class Service::Github < Service
     raise_config_error "Missing 'user_repo'" if data[:user_repo].to_s ==''
     data[:user_repo]
   end
-
 end
