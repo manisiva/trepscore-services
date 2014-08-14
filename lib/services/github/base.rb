@@ -5,7 +5,8 @@ module Github
   class Base
     #Constants for this class comes here
     CLASS_NAME_WITH_ISSUE = "Issues"
-    ISSUE_RESOURCE_PATH = "issues"
+    ISSUES_RESOURCE_PATH = "issues"
+    FILES_RESOURCE_PATH = "files"
     OPEN_ISSUES = "open"
     CLOSED_ISSUES = "closed"
     
@@ -21,35 +22,34 @@ module Github
     end
 
     def get(options = {})
-      return to_enum(__callee__, options) unless block_given?
+      return to_enum(__callee__, options) unless block_given?             
 
       response = _get_resource(options)
       if response.success?
-        data = [(response.body || [])].flatten
+        data = [(response.body || [])].flatten      
         data.each do |item|
+          @options[:sha] = item['sha'] if resource_path == "commits"		
           yield OpenStruct.new item
         end
       end
-
     end
     alias_method :each, :get
 
     def metrics
       metrics = {total: all.count}
-
       get.each do |item|
+      metrics ={total:  all_files = (item[:tree].to_a).length} if resource_path.start_with?("files")
         key = metric_key(item)
-        break if key.nil?
-
+        break if key.nil? 
         metrics[key] ||= 0
         metrics[key] += 1
       end
-
       metrics
     end
 
     def metric_key(item)
-      (item.try(:type) || item.try(:status)).try(:to_sym)  if item.status != nil
+	trees = item[:tree].to_a
+      (item.try(:tree) || item.try(:type) || item.try(:status)).try(:to_sym)  if item.status != nil
     end
 
     def all(options = {})
@@ -58,10 +58,14 @@ module Github
       data
     end
 
+    def sha
+      @sha ||= []
+    end       
+
     def prepare_options(options = {})
       options
     end
- 
+
     def protocol
       'https://'
     end
@@ -72,6 +76,14 @@ module Github
 
     def slug
       "#{owner}/#{name}"
+    end
+
+    def sha_slug
+     @options[:sha]
+    end
+
+    def file_slug
+      "git/trees/#{sha_slug}"
     end
  
     def owner
@@ -104,23 +116,32 @@ module Github
     end
 
     def issue_resource_path
-      ISSUE_RESOURCE_PATH
+      ISSUES_RESOURCE_PATH
+    end
+
+    def file_resource_path
+      FILES_RESOURCE_PATH
     end
 
     #dynamically passing state for the issues based on the class name
     def filter_conditions(resource_path)      	
-      { :state => OPEN_ISSUES} if resource_path.start_with?(OPEN_ISSUES)
-      { :state => CLOSED_ISSUES} if resource_path.start_with?(CLOSED_ISSUES)
+      {:state => OPEN_ISSUES} if resource_path.start_with?(OPEN_ISSUES)
+      {:state => CLOSED_ISSUES} if resource_path.start_with?(CLOSED_ISSUES)
     end    
+
+    def recursive_path
+     {:recursive=>1}
+    end
 
     private
       def _get_resource(options = {})
         params = default_params.merge (options.delete(:params) ||  {})
         response = connection.get do |req|
-          req.url (options.delete(:resource_path) || resource_path)
+         req.url (options.delete(:resource_path) || resource_path)
+          req.url (file_slug), {:recursive => 1} if resource_path && resource_path.start_with?(FILES_RESOURCE_PATH)
           req.url (issue_resource_path), filter_conditions(resource_path) if resource_path && resource_path.end_with?(CLASS_NAME_WITH_ISSUE)          
           req.headers = ::Github::HEADERS
-          req.params 
+          req.params.merge! params
         end
       end
 

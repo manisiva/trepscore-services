@@ -9,6 +9,7 @@ module Github
   autoload :Client, 'github/client'
   autoload :ClosedIssues, 'github/closed_issues'
   autoload :Commits, 'github/commits'
+  autoload :Files, 'github/files'
   autoload :OpenIssues, 'github/open_issues'  
 end
 
