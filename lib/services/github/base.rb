@@ -6,6 +6,7 @@ module Github
     #Constants for this class comes here
     CLASS_NAME_WITH_ISSUE = "Issues"
     ISSUES_RESOURCE_PATH = "issues"
+    COMMITS_RESOURCE_PATH = "commits"
     FILES_RESOURCE_PATH = "files"
     OPEN_ISSUES = "open"
     CLOSED_ISSUES = "closed"
@@ -28,7 +29,7 @@ module Github
       if response.success?
         data = [(response.body || [])].flatten      
         data.each do |item|
-          @options[:sha] = item['sha'] if resource_path == "commits"		
+          @options[:sha] = item['sha'] if resource_path == COMMITS_RESOURCE_PATH		
           yield OpenStruct.new item
         end
       end
@@ -38,7 +39,7 @@ module Github
     def metrics
       metrics = {total: all.count}
       get.each do |item|
-      metrics ={total:  all_files = (item[:tree].to_a).length} if resource_path.start_with?("files")
+      metrics ={total:  all_files = (item[:tree].to_a).length} if resource_path.start_with?(FILES_RESOURCE_PATH)
         key = metric_key(item)
         break if key.nil? 
         metrics[key] ||= 0
@@ -48,7 +49,7 @@ module Github
     end
 
     def metric_key(item)
-	trees = item[:tree].to_a
+	  trees = item[:tree].to_a
       (item.try(:tree) || item.try(:type) || item.try(:status)).try(:to_sym)  if item.status != nil
     end
 
@@ -138,7 +139,7 @@ module Github
         params = default_params.merge (options.delete(:params) ||  {})
         response = connection.get do |req|
          req.url (options.delete(:resource_path) || resource_path)
-          req.url (file_slug), {:recursive => 1} if resource_path && resource_path.start_with?(FILES_RESOURCE_PATH)
+          req.url (file_slug), recursive_path if resource_path && resource_path.start_with?(FILES_RESOURCE_PATH)
           req.url (issue_resource_path), filter_conditions(resource_path) if resource_path && resource_path.end_with?(CLASS_NAME_WITH_ISSUE)          
           req.headers = ::Github::HEADERS
           req.params.merge! params
