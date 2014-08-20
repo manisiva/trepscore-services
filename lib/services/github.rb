@@ -1,10 +1,5 @@
 module Github
   require 'octokit'
-  HEADERS = {
-    "User-Agent"    => "Ruby.Github.Api",
-    "Accept"        => "application/vnd.github.v3+json",
-    "Content-Type"  => "application/json"
-  }
 
   autoload :Base, 'github/base'
   autoload :Client, 'github/client'
@@ -15,30 +10,30 @@ module Github
 end
 
 class Service::Github < Service
-  string :token, :secret, :name, :repo
+  string :client_id, :client_secret, :user_name, :user_repo
   category :developer_tools
 
   def call
-    client = ::Github::Client.new(client_id: token, client_secret: secret, user_name: name, user_repo: repo)
+    client = ::Github::Client.new(client_id: client_id, client_secret: client_secret, user_name: user_name, user_repo: user_repo)
     client.metrics
   end
 
-  def token
+  def client_id
     raise_config_error "Missing 'client_id'" if data[:client_id].to_s ==''
     data[:client_id]
   end
 
-  def secret
+  def client_secret
     raise_config_error "Missing 'client secret'" if data[:client_secret].to_s==''
     data[:client_secret]
   end
 
-  def name
+  def user_name
     raise_config_error "Missing 'user_name'" if data[:user_name].to_s ==''
     data[:user_name]
   end
 
-  def repo
+  def user_repo
     raise_config_error "Missing 'user_repo'" if data[:user_repo].to_s ==''
     data[:user_repo]
   end
