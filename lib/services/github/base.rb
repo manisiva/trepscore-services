@@ -4,11 +4,14 @@ module Github
   class Base
     #Constants for this class comes here
     CLASS_NAME_WITH_ISSUE = "Issues"
-    ISSUES_RESOURCE_PATH = "issues"
-    FILES_RESOURCE_PATH = "files"
+    CLOSED_ISSUES = "closed"   
     COMMITS_RESOURCE_PATH = "commits"
+    CODES_RESOURCE_PATH = "codes"
+    FILES_RESOURCE_PATH = "files"
+    FILE_TYPE_BLOB = "blob"
+    ISSUES_RESOURCE_PATH = "issues"
     OPEN_ISSUES = "open"
-    CLOSED_ISSUES = "closed"
+    
 
     def initialize(options = {})
       @options = options      
@@ -44,8 +47,24 @@ module Github
     end 
    
     def get_files
-      files  = Octokit.tree("#{slug}", "#{sha_slug}", :recursive => true).tree
-      files.count
+      @files = Octokit.tree("#{slug}", "#{sha_slug}", :recursive => true).tree
+    end 
+
+    def get_no_of_files
+      get_files.count
+    end
+
+    def get_lines_of_codes
+      get_files
+      lines_of_codes = 0
+      @files.each do |file|
+        if file[:type] == FILE_TYPE_BLOB
+          codes_encoded =  Octokit.contents("#{slug}",:path => file[:path])
+          codes_decoded = Base64.decode64(codes_encoded.content)
+          lines_of_codes += codes_decoded.count("\n")
+        end
+      end 
+      lines_of_codes     
     end 
 
     def all(options = {})
@@ -53,17 +72,14 @@ module Github
       data << get_commits if resource_path.start_with?(COMMITS_RESOURCE_PATH)
       data << get_open_issues if resource_path.start_with?(OPEN_ISSUES)
       data << get_closed_issues if resource_path.start_with?(CLOSED_ISSUES)
-      data << get_files if resource_path.start_with?(FILES_RESOURCE_PATH)
+      data << get_no_of_files if resource_path.start_with?(FILES_RESOURCE_PATH)
+      data << get_lines_of_codes if resource_path.start_with?(CODES_RESOURCE_PATH)
       data	
     end
    
     def enable_pagination_by_default  
       Octokit.auto_paginate = true
-    end
-
-    def sha
-      @sha ||= []
-    end       
+    end      
 
     def slug
       "#{user}/#{repo}"

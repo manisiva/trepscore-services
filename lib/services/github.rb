@@ -4,6 +4,7 @@ module Github
   autoload :Base, 'github/base'
   autoload :Client, 'github/client'
   autoload :ClosedIssues, 'github/closed_issues'
+  autoload :Codes, 'github/codes'
   autoload :Commits, 'github/commits'
   autoload :Files, 'github/files'
   autoload :OpenIssues, 'github/open_issues'  

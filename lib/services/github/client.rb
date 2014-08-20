@@ -9,7 +9,7 @@ class Github::Client < Github::Base
   def metrics
     metrics = {}
     
-    %i{commits files open_issues closed_issues}.each do |source|
+    %i{commits files codes open_issues closed_issues}.each do |source|
       metrics[source] = send(source).metrics
     end
 
