@@ -15,6 +15,7 @@ module Github
     def initialize(options = {})
       @options = options      
       authenticate
+      #If you want to see full data, Please uncomment this line. Presently you can see a maximum of 30.
       #enable_pagination_by_default
     end
 
