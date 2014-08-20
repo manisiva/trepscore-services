@@ -9,18 +9,15 @@ module Github
     COMMITS_RESOURCE_PATH = "commits"
     OPEN_ISSUES = "open"
     CLOSED_ISSUES = "closed"
-    
-    include Enumerable
 
     def initialize(options = {})
       @options = options      
       authenticate
-      #If you want to see full data, Please uncomment this line. Presently you can see a maximum of 30.
-      #enable_pagination_by_default
+      enable_pagination_by_default
     end
 
-    def authenticate(token = @options[:client_id], secret = @options[:client_secret])
-      client = Octokit::Client.new(:client_id => @options[:client_id], :client_secret => @options[:client_secret])
+    def authenticate(client_id = @options[:client_id], client_secret = @options[:client_secret], user_name = @options[:user_name], user_repo = @options[:user_repo])
+      client = Octokit::Client.new(:client_id => @options[:client_id], :client_secret => @options[:client_secret], :user_name => @options[:user_name], :user_repo => @options[:user_repo])
     end
 
     def metrics
