@@ -24,7 +24,7 @@ module Github
     end
 
     def metrics
-      metrics = {total: all.join(',')}
+      metrics = {total: all.join.to_i}
       metrics
     end
   
