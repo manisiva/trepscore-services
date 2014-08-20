@@ -4,8 +4,6 @@ gemspec
 
 gem 'rake'
 
-gem 'octokit', "~> 3.0"
-
 group :development do
   gem 'pry'
   gem 'rspec'
